@@ -1,0 +1,14 @@
+import pandas as pd
+
+# Your existing code to read the HTML table
+url = 'https://www.faa.gov/air_traffic/flight_info/aeronav/productcatalog/doles/AutoDOLE/'
+df_list = pd.read_html(url)
+
+# Assuming the relevant information is in the first table (change the index accordingly)
+df = df_list[0]
+
+# Access the 'Product Name' column using iloc
+sectional_charts_info = df[df.iloc[:, 0] == 'Sectional Aeronautical Charts']
+
+# Display the result
+print(sectional_charts_info)
