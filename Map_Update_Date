@@ -1,0 +1,266 @@
+from bs4 import BeautifulSoup
+
+# Assuming 'html_content' is the HTML content you provided
+html_content = """
+... (<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HEAD><TITLE>Your source for Aviation Digital Raster Charts.</TITLE>
+<link href="http://www.chartbundle.com/stylesheet.css" rel="stylesheet" type="text/css" />
+</HEAD>
+
+<BODY>
+<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="zusq8p55sfbyfsi"></script>
+<ul id="nav">
+<li id="nav-home"><a href="http://www.chartbundle.com/">Home</a></li>
+<li id="nav-tpp"><a href="http://www.chartbundle.com/v2/index_tpp.cgi">TPP</a></li>
+<li id="nav-afd"><a href="http://www.chartbundle.com/v2/index_afd.cgi">AFD</a></li>
+<li id="nav-charts"><a href="http://www.chartbundle.com/charts/"><em>Charts</em></a></li>
+</ul>
+<h3>Edition Status</h3>
+<p>The below editions are the currently loaded charts on our system. Please check your paper charts or <a href="https://www.faa.gov/air_traffic/flight_info/aeronav/productcatalog/doles/">FAA Aeronav Dates of Latest Editions</a> to verify currency.</p>
+<p>Remember your device or download program may cache charts, always be sure to check and/or clear caches when revisions are updated.</p>
+<p><a href="/charts/tms.html">Click here for our web chart viewer.</a></p>
+
+<h3>Sectional Charts</h3>
+<table><tr><th>Chart Name</th><th>Edition</th></tr>
+<tr><td>Albuquerque SEC</td><td>2023-11-30</td></tr>
+<tr><td>Anchorage SEC</td><td>2023-11-30</td></tr>
+<tr><td>Atlanta SEC</td><td>2023-11-30</td></tr>
+<tr><td>Bethel SEC</td><td>2023-11-30</td></tr>
+<tr><td>Billings SEC</td><td>2023-11-30</td></tr>
+<tr><td>Brownsville SEC</td><td>2023-11-30</td></tr>
+<tr><td>Cape Lisburne SEC</td><td>2023-11-30</td></tr>
+<tr><td>Caribbean 1 VFR Chart</td><td>2023-11-30</td></tr>
+<tr><td>Caribbean 2 VFR Chart</td><td>2023-11-30</td></tr>
+<tr><td>Charlotte SEC</td><td>2023-11-30</td></tr>
+<tr><td>Cheyenne SEC</td><td>2023-11-30</td></tr>
+<tr><td>Chicago SEC</td><td>2023-11-30</td></tr>
+<tr><td>Cincinnati SEC</td><td>2023-11-30</td></tr>
+<tr><td>Cold Bay SEC</td><td>2023-11-30</td></tr>
+<tr><td>Dallas-Ft Worth SEC</td><td>2023-11-30</td></tr>
+<tr><td>Dawson SEC</td><td>2023-11-30</td></tr>
+<tr><td>Denver SEC</td><td>2023-11-30</td></tr>
+<tr><td>Detroit SEC</td><td>2023-11-30</td></tr>
+<tr><td>Dutch Harbor SEC</td><td>2023-11-30</td></tr>
+<tr><td>El Paso SEC</td><td>2023-11-30</td></tr>
+<tr><td>Fairbanks SEC</td><td>2023-11-30</td></tr>
+<tr><td>Great Falls SEC</td><td>2023-11-30</td></tr>
+<tr><td>Green Bay SEC</td><td>2023-11-30</td></tr>
+<tr><td>Halifax SEC</td><td>2023-11-30</td></tr>
+<tr><td>Hawaiian Islands SEC</td><td>2023-11-30</td></tr>
+<tr><td>Honolulu Inset SEC</td><td>2023-11-30</td></tr>
+<tr><td>Houston SEC</td><td>2023-11-30</td></tr>
+<tr><td>Jacksonville SEC</td><td>2023-11-30</td></tr>
+<tr><td>Juneau SEC</td><td>2023-11-30</td></tr>
+<tr><td>Kansas City SEC</td><td>2023-11-30</td></tr>
+<tr><td>Ketchikan SEC</td><td>2023-11-30</td></tr>
+<tr><td>Klamath Falls SEC</td><td>2023-11-30</td></tr>
+<tr><td>Kodiak SEC</td><td>2023-11-30</td></tr>
+<tr><td>Lake Huron SEC</td><td>2023-11-30</td></tr>
+<tr><td>Las Vegas SEC</td><td>2023-11-30</td></tr>
+<tr><td>Los Angeles SEC</td><td>2023-11-30</td></tr>
+<tr><td>Mariana Islands Inset SEC</td><td>2023-11-30</td></tr>
+<tr><td>McGrath SEC</td><td>2023-11-30</td></tr>
+<tr><td>Memphis SEC</td><td>2023-11-30</td></tr>
+<tr><td>Miami SEC</td><td>2023-11-30</td></tr>
+<tr><td>Montreal SEC</td><td>2023-11-30</td></tr>
+<tr><td>New Orleans SEC</td><td>2023-11-30</td></tr>
+<tr><td>New York SEC</td><td>2023-11-30</td></tr>
+<tr><td>Nome SEC</td><td>2023-11-30</td></tr>
+<tr><td>Omaha SEC</td><td>2023-11-30</td></tr>
+<tr><td>Phoenix SEC</td><td>2023-11-30</td></tr>
+<tr><td>Point Barrow SEC</td><td>2023-11-30</td></tr>
+<tr><td>Salt Lake City SEC</td><td>2023-11-30</td></tr>
+<tr><td>Samoan Islands Inset SEC</td><td>2023-11-30</td></tr>
+<tr><td>San Antonio SEC</td><td>2023-11-30</td></tr>
+<tr><td>San Francisco SEC</td><td>2023-11-30</td></tr>
+<tr><td>Seattle SEC</td><td>2023-11-30</td></tr>
+<tr><td>Seward SEC</td><td>2023-11-30</td></tr>
+<tr><td>St Louis SEC</td><td>2023-11-30</td></tr>
+<tr><td>Twin Cities SEC</td><td>2023-11-30</td></tr>
+<tr><td>Washington SEC</td><td>2023-11-30</td></tr>
+<tr><td>Western Aleutian Islands East SEC</td><td>2023-11-30</td></tr>
+<tr><td>Western Aleutian Islands West SEC</td><td>2023-11-30</td></tr>
+<tr><td>Wichita SEC</td><td>2023-11-30</td></tr>
+</table>
+<h3>Terminal Area Charts</h3>
+<table><tr><th>Chart Name</th><th>Edition</th></tr>
+<tr><td>Anchorage TAC</td><td>2023-11-30</td></tr>
+<tr><td>Atlanta TAC</td><td>2023-11-30</td></tr>
+<tr><td>Baltimore-Washington TAC</td><td>2023-11-30</td></tr>
+<tr><td>Boston TAC</td><td>2023-11-30</td></tr>
+<tr><td>Charlotte TAC</td><td>2023-11-30</td></tr>
+<tr><td>Chicago TAC</td><td>2023-11-30</td></tr>
+<tr><td>Cincinnati TAC</td><td>2023-11-30</td></tr>
+<tr><td>Cleveland TAC</td><td>2023-11-30</td></tr>
+<tr><td>Colorado Springs TAC</td><td>2023-11-30</td></tr>
+<tr><td>Dallas-Ft Worth TAC</td><td>2023-11-30</td></tr>
+<tr><td>Denver TAC</td><td>2023-11-30</td></tr>
+<tr><td>Detroit TAC</td><td>2023-11-30</td></tr>
+<tr><td>Fairbanks TAC</td><td>2023-11-30</td></tr>
+<tr><td>Houston TAC</td><td>2023-11-30</td></tr>
+<tr><td>Kansas City TAC</td><td>2023-11-30</td></tr>
+<tr><td>Las Vegas TAC</td><td>2023-11-30</td></tr>
+<tr><td>Los Angeles TAC</td><td>2023-11-30</td></tr>
+<tr><td>Memphis TAC</td><td>2023-11-30</td></tr>
+<tr><td>Miami TAC</td><td>2023-11-30</td></tr>
+<tr><td>Minneapolis-St Paul TAC</td><td>2023-11-30</td></tr>
+<tr><td>New Orleans TAC</td><td>2023-11-30</td></tr>
+<tr><td>New York TAC</td><td>2023-11-30</td></tr>
+<tr><td>Orlando TAC</td><td>2023-11-30</td></tr>
+<tr><td>Philadelphia TAC</td><td>2023-11-30</td></tr>
+<tr><td>Phoenix TAC</td><td>2023-11-30</td></tr>
+<tr><td>Pittsburgh TAC</td><td>2023-11-30</td></tr>
+<tr><td>Portland TAC</td><td>2023-11-30</td></tr>
+<tr><td>Puerto Rico-VI TAC</td><td>2023-11-30</td></tr>
+<tr><td>Salt Lake City TAC</td><td>2023-11-30</td></tr>
+<tr><td>San Diego TAC</td><td>2023-11-30</td></tr>
+<tr><td>San Francisco TAC</td><td>2023-11-30</td></tr>
+<tr><td>Seattle TAC</td><td>2023-11-30</td></tr>
+<tr><td>St Louis TAC</td><td>2023-11-30</td></tr>
+<tr><td>Tampa TAC</td><td>2023-11-30</td></tr>
+</table>
+<h3>Helicopter Charts</h3>
+<table><tr><th>Chart Name</th><th>Edition</th></tr>
+<tr><td>Baltimore HEL</td><td>2023-11-30</td></tr>
+<tr><td>Boston Downtown HEL</td><td>2023-11-30</td></tr>
+<tr><td>Boston HEL</td><td>2023-11-30</td></tr>
+<tr><td>Chicago HEL</td><td>2023-11-30</td></tr>
+<tr><td>Chicago O'Hare Inset HEL</td><td>2023-11-30</td></tr>
+<tr><td>Dallas-Ft Worth HEL</td><td>2023-11-30</td></tr>
+<tr><td>Dallas-Love Inset HEL</td><td>2023-11-30</td></tr>
+<tr><td>Detroit HEL</td><td>2023-11-30</td></tr>
+<tr><td>Downtown Manhattan HEL</td><td>2023-11-30</td></tr>
+<tr><td>Eastern Long Island HEL</td><td>2023-11-30</td></tr>
+<tr><td>Houston North HEL</td><td>2023-11-30</td></tr>
+<tr><td>Houston South HEL</td><td>2023-11-30</td></tr>
+<tr><td>Los Angeles East HEL</td><td>2023-11-30</td></tr>
+<tr><td>Los Angeles West HEL</td><td>2023-11-30</td></tr>
+<tr><td>New York HEL</td><td>2023-11-30</td></tr>
+<tr><td>U.S. Gulf Coast HEL</td><td>2023-11-30</td></tr>
+<tr><td>Washington HEL</td><td>2023-11-30</td></tr>
+<tr><td>Washington Inset HEL</td><td>2023-11-30</td></tr>
+</table>
+<h3>Enroute Low Charts</h3>
+<table><tr><th>Chart Name</th><th>Edition</th></tr>
+<tr><td>ENR_AKL01</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKL01_JNU</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKL01_VR</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKL02C</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKL02E</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKL02W</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKL03</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKL03_FAI</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKL03_OME</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKL04</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKL04_ANC</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L01</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L02</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L03</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L04</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L05</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L06N</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L06S</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L07</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L08</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L09</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L10</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L11</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L12</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L13</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L14</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L15</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L16</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L17</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L18</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L19</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L20</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L21</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L22</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L23</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L24</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L25</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L26</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L27</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L28</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L29</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L30</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L31</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L32</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L33</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L34</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L35</td><td>2023-11-30</td></tr>
+<tr><td>ENR_L36</td><td>2023-11-30</td></tr>
+<tr><td>ENR_P01</td><td>2023-11-30</td></tr>
+<tr><td>ENR_P01_GUA</td><td>2023-11-30</td></tr>
+<tr><td>ENR_P02</td><td>2023-11-30</td></tr>
+</table>
+<h3>Area Charts</h3>
+<table><tr><th>Chart Name</th><th>Edition</th></tr>
+<tr><td>ENR_A01_ATL</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A01_DCA</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A01_DET</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A01_JAX</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A01_MIA</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A01_MSP</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A01_STL</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A02_DEN</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A02_DFW</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A02_LAX</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A02_MKC</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A02_ORD</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A02_PHX</td><td>2023-11-30</td></tr>
+<tr><td>ENR_A02_SFO</td><td>2023-11-30</td></tr>
+</table>
+<h3>Enroute High Charts</h3>
+<table><tr><th>Chart Name</th><th>Edition</th></tr>
+<tr><td>ENR_AKH01</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKH01_SEA</td><td>2023-11-30</td></tr>
+<tr><td>ENR_AKH02</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H01</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H02</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H03</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H04</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H05</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H06</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H07</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H08</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H09</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H10</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H11</td><td>2023-11-30</td></tr>
+<tr><td>ENR_H12</td><td>2023-11-30</td></tr>
+</table>
+</BODY>) ...
+"""
+
+# Parse the HTML content with BeautifulSoup
+soup = BeautifulSoup(html_content, 'html.parser')
+
+# Find all tables on the webpage
+tables = soup.find_all('table')
+
+# Iterate through each table and extract data
+for table in tables:
+    # Create a dictionary to store table data
+    table_info = {}
+
+    # Get the table headers (th elements)
+    headers = [th.text.strip() for th in table.find_all('th')]
+
+    # Iterate through table rows (tr elements)
+    for tr in table.find_all('tr'):
+        # Get table data (td elements)
+        td_values = [td.text.strip() for td in tr.find_all('td')]
+
+        # Check if the number of header and data values match
+        if len(headers) == len(td_values):
+            # Create a dictionary with header as key and corresponding data as value
+            row_data = dict(zip(headers, td_values))
+
+            # Add the row data to the table_info dictionary
+            table_info[row_data['Chart Name']] = row_data['Edition']
+
+    # Now 'table_info' contains the extracted data for the current table
+    print(table_info)
+
+    # Break out of the loop after processing the first table
+    break
